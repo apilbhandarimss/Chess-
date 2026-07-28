@@ -1,50 +1,147 @@
-#include<iostream>
-#include<map>
-#include<chrono>
-#include<algorithm>
-#include<memory>
-#include<vector>
-#include<string>
-#include<raylib.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <raylib.h>
 #include "Board.h"
 #include "Engine.h"
 #include "Evaluator.h"
 #include "RuleChecker.h"
-const int SCREEN_WIDTH = 1500;
+
+const int SCREEN_WIDTH  = 1500;
 const int SCREEN_HEIGHT = 1080;
-void LoadPieceTextures() {
-    std::vector<std::pair<std::string, std::string>> texturePaths = {
-        {"white_pawn", "3d_wood/wp.png"},   {"white_knight", "3d_wood/wn.png"},
-        {"white_bishop", "3d_wood/wb.png"}, {"white_rook", "3d_wood/wr.png"},
-        {"white_queen", "3d_wood/wq.png"},  {"white_king", "3d_wood/wk.png"},
-        {"black_pawn", "3d_wood/bp.png"},   {"black_knight", "3d_wood/bn.png"},
-        {"black_bishop", "3d_wood/bb.png"}, {"black_rook", "3d_wood/br.png"},
-        {"black_queen", "3d_wood/bq.png"},  {"black_king", "3d_wood/bk.png"}
+
+void LoadPieceTextures()
+{
+    const std::vector<std::pair<std::string, std::string>> paths = {
+        {"white_pawn",   "3d_wood/wp.png"}, {"white_knight", "3d_wood/wn.png"},
+        {"white_bishop", "3d_wood/wb.png"}, {"white_rook",   "3d_wood/wr.png"},
+        {"white_queen",  "3d_wood/wq.png"}, {"white_king",   "3d_wood/wk.png"},
+        {"black_pawn",   "3d_wood/bp.png"}, {"black_knight", "3d_wood/bn.png"},
+        {"black_bishop", "3d_wood/bb.png"}, {"black_rook",   "3d_wood/br.png"},
+        {"black_queen",  "3d_wood/bq.png"}, {"black_king",   "3d_wood/bk.png"},
     };
-        for (const auto& texture : texturePaths)
+    for (const auto& [key, path] : paths)
+        peiceTexture[key] = LoadTexture(path.c_str());
+}
+
+bool hasAnyLegalMove(const Board& board, bool whiteToMove)
+{
+    for (int fromRow = 0; fromRow < 8; fromRow++)
+    for (int fromCol = 0; fromCol < 8; fromCol++)
     {
-        peiceTexture[texture.first] = LoadTexture(texture.second.c_str());
+        char piece = board.squares[fromRow][fromCol];
+        if (piece == ' ') continue;
+        if ( whiteToMove && !isWhitePiece(piece)) continue;
+        if (!whiteToMove &&  isWhitePiece(piece)) continue;
+
+        for (int toRow = 0; toRow < 8; toRow++)
+        for (int toCol = 0; toCol < 8; toCol++)
+        {
+            Board next = board;
+            next.squares[toRow][toCol]     = piece;
+            next.squares[fromRow][fromCol] = ' ';
+            if (isValidMove(board, next))
+                return true;
+        }
     }
+    return false;
+}
+
+bool isCheckmate(const Board& board, bool whiteToMove)
+{
+    return isKingInCheck(board, whiteToMove) && !hasAnyLegalMove(board, whiteToMove);
+}
+
+bool isStalemate(const Board& board, bool whiteToMove)
+{
+    return !isKingInCheck(board, whiteToMove) && !hasAnyLegalMove(board, whiteToMove);
+}
+
+char handlePromotionDialog(bool promotingWhite)
+{
+    DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Fade(BLACK, 0.55f));
+
+    DrawRectangle(450, 250, 600, 350, DARKGRAY);
+    DrawRectangleLines(450, 250, 600, 350, WHITE);
+    DrawText("Promote Pawn", 610, 270, 30, WHITE);
+
+    const Rectangle queenBtn  = { 500, 340, 180, 100 };
+    const Rectangle rookBtn   = { 760, 340, 180, 100 };
+    const Rectangle bishopBtn = { 500, 470, 180, 100 };
+    const Rectangle knightBtn = { 760, 470, 180, 100 };
+
+    DrawRectangleRec(queenBtn,  LIGHTGRAY); DrawText("Queen",  545, 380, 25, BLACK);
+    DrawRectangleRec(rookBtn,   LIGHTGRAY); DrawText("Rook",   815, 380, 25, BLACK);
+    DrawRectangleRec(bishopBtn, LIGHTGRAY); DrawText("Bishop", 530, 510, 25, BLACK);
+    DrawRectangleRec(knightBtn, LIGHTGRAY); DrawText("Knight", 800, 510, 25, BLACK);
+
+    if (!IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        return '\0';
+
+    Vector2 mouse = GetMousePosition();
+    if (CheckCollisionPointRec(mouse, queenBtn))  return promotingWhite ? 'Q' : 'q';
+    if (CheckCollisionPointRec(mouse, rookBtn))   return promotingWhite ? 'R' : 'r';
+    if (CheckCollisionPointRec(mouse, bishopBtn)) return promotingWhite ? 'B' : 'b';
+    if (CheckCollisionPointRec(mouse, knightBtn)) return promotingWhite ? 'N' : 'n';
+
+    return '\0';
+}
+
+void drawOverlayMessage(const Board& board, const char* msg)
+{
+    BeginDrawing();
+    drawBoard(board);
+    DrawRectangle(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 50, 500, 100, { 0, 0, 0, 200 });
+    DrawText(msg, SCREEN_WIDTH / 2 - MeasureText(msg, 28) / 2, SCREEN_HEIGHT / 2 - 14, 28, WHITE);
+    EndDrawing();
 }
 
 int main()
 {
-    Board b;
-    InitWindow(SCREEN_WIDTH,SCREEN_HEIGHT,"Chess Engine");
+    Board board;
+
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Chess Engine");
+    SetTargetFPS(60);
     LoadPieceTextures();
+
     while (!WindowShouldClose())
-    {   move(b);
-        BeginDrawing();
-        drawBoard(b);
-        EndDrawing();
-        
-    }
-    for (auto& texture : peiceTexture)
     {
-        UnloadTexture(texture.second);
+        if (isCheckmate(board, board.whiteturn))
+        {
+            const char* msg = board.whiteturn ? "Black wins by checkmate!" : "White wins by checkmate!";
+            drawOverlayMessage(board, msg);
+            continue;
+        }
+
+        if (isStalemate(board, board.whiteturn))
+        {
+            drawOverlayMessage(board, "Stalemate - Draw!");
+            continue;
+        }
+
+        if (!board.isPromoting)
+            move(board);
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+        drawBoard(board);
+
+        if (board.isPromoting)
+        {
+            char chosen = handlePromotionDialog(board.whiteturn);
+            if (chosen != '\0')
+            {
+                board.squares[board.promotionRow][board.promotionCol] = chosen;
+                board.isPromoting = false;
+                board.promotionRow = -1;
+                board.promotionCol = -1;
+                board.whiteturn = !board.whiteturn;
+            }
+        }
+
+        EndDrawing();
     }
+
     CloseWindow();
-    
-    
     return 0;
 }
