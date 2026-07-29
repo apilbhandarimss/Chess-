@@ -208,12 +208,12 @@ bool isValidMove(const Board& oldBoard, const Board& newBoard)
     char piece = movingPiece;
     char targetPiece = oldBoard.squares[toRow][toCol];
 
-    std::cout << "Trying move: "
-              << piece << " "
-              << fromRow << "," << fromCol
-              << " -> "
-              << toRow << "," << toCol
-              << "\n";
+    // std::cout << "Trying move: "
+    //           << piece << " "
+    //           << fromRow << "," << fromCol
+    //           << " -> "
+    //           << toRow << "," << toCol
+    //           << "\n";
 
     bool moveIsLegal = false;
 

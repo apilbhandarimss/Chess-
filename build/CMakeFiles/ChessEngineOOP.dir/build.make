@@ -116,26 +116,11 @@ CMakeFiles/ChessEngineOOP.dir/src/Evaluator.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChessEngineOOP.dir/src/Evaluator.cpp.s"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\ACER\Documents\GitHub\Chess-\src\Evaluator.cpp -o CMakeFiles\ChessEngineOOP.dir\src\Evaluator.cpp.s
 
-CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj: CMakeFiles/ChessEngineOOP.dir/flags.make
-CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj: CMakeFiles/ChessEngineOOP.dir/includes_CXX.rsp
-CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj: C:/Users/ACER/Documents/GitHub/Chess-/src/Piece.cpp
-CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj: CMakeFiles/ChessEngineOOP.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj -MF CMakeFiles\ChessEngineOOP.dir\src\Piece.cpp.obj.d -o CMakeFiles\ChessEngineOOP.dir\src\Piece.cpp.obj -c C:\Users\ACER\Documents\GitHub\Chess-\src\Piece.cpp
-
-CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\ACER\Documents\GitHub\Chess-\src\Piece.cpp > CMakeFiles\ChessEngineOOP.dir\src\Piece.cpp.i
-
-CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\ACER\Documents\GitHub\Chess-\src\Piece.cpp -o CMakeFiles\ChessEngineOOP.dir\src\Piece.cpp.s
-
 CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj: CMakeFiles/ChessEngineOOP.dir/flags.make
 CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj: CMakeFiles/ChessEngineOOP.dir/includes_CXX.rsp
 CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj: C:/Users/ACER/Documents/GitHub/Chess-/src/RuleChecker.cpp
 CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj: CMakeFiles/ChessEngineOOP.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj -MF CMakeFiles\ChessEngineOOP.dir\src\RuleChecker.cpp.obj.d -o CMakeFiles\ChessEngineOOP.dir\src\RuleChecker.cpp.obj -c C:\Users\ACER\Documents\GitHub\Chess-\src\RuleChecker.cpp
 
 CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.i: cmake_force
@@ -150,7 +135,7 @@ CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj: CMakeFiles/ChessEngineOOP.dir/fl
 CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj: CMakeFiles/ChessEngineOOP.dir/includes_CXX.rsp
 CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj: C:/Users/ACER/Documents/GitHub/Chess-/src/main.cpp
 CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj: CMakeFiles/ChessEngineOOP.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj -MF CMakeFiles\ChessEngineOOP.dir\src\main.cpp.obj.d -o CMakeFiles\ChessEngineOOP.dir\src\main.cpp.obj -c C:\Users\ACER\Documents\GitHub\Chess-\src\main.cpp
 
 CMakeFiles/ChessEngineOOP.dir/src/main.cpp.i: cmake_force
@@ -166,7 +151,6 @@ ChessEngineOOP_OBJECTS = \
 "CMakeFiles/ChessEngineOOP.dir/src/Board.cpp.obj" \
 "CMakeFiles/ChessEngineOOP.dir/src/Engine.cpp.obj" \
 "CMakeFiles/ChessEngineOOP.dir/src/Evaluator.cpp.obj" \
-"CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj" \
 "CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj" \
 "CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj"
 
@@ -176,7 +160,6 @@ ChessEngineOOP_EXTERNAL_OBJECTS =
 ChessEngineOOP.exe: CMakeFiles/ChessEngineOOP.dir/src/Board.cpp.obj
 ChessEngineOOP.exe: CMakeFiles/ChessEngineOOP.dir/src/Engine.cpp.obj
 ChessEngineOOP.exe: CMakeFiles/ChessEngineOOP.dir/src/Evaluator.cpp.obj
-ChessEngineOOP.exe: CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj
 ChessEngineOOP.exe: CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj
 ChessEngineOOP.exe: CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj
 ChessEngineOOP.exe: CMakeFiles/ChessEngineOOP.dir/build.make
@@ -184,7 +167,7 @@ ChessEngineOOP.exe: C:/msys64/mingw64/lib/libraylib.dll.a
 ChessEngineOOP.exe: CMakeFiles/ChessEngineOOP.dir/linkLibs.rsp
 ChessEngineOOP.exe: CMakeFiles/ChessEngineOOP.dir/objects1.rsp
 ChessEngineOOP.exe: CMakeFiles/ChessEngineOOP.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable ChessEngineOOP.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable ChessEngineOOP.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\ChessEngineOOP.dir\link.txt --verbose=$(VERBOSE)
 	"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/ACER/Documents/GitHub/Chess-/3d_wood C:/Users/ACER/Documents/GitHub/Chess-/build/3d_wood
 

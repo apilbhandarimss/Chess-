@@ -84,12 +84,12 @@ clean: CMakeFiles/ChessEngineOOP.dir/clean
 CMakeFiles/ChessEngineOOP.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessEngineOOP.dir\build.make CMakeFiles/ChessEngineOOP.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessEngineOOP.dir\build.make CMakeFiles/ChessEngineOOP.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target ChessEngineOOP"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles --progress-num=1,2,3,4,5,6 "Built target ChessEngineOOP"
 .PHONY : CMakeFiles/ChessEngineOOP.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ChessEngineOOP.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles 6
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/ChessEngineOOP.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles 0
 .PHONY : CMakeFiles/ChessEngineOOP.dir/rule
@@ -101,7 +101,7 @@ ChessEngineOOP: CMakeFiles/ChessEngineOOP.dir/rule
 # codegen rule for target.
 CMakeFiles/ChessEngineOOP.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessEngineOOP.dir\build.make CMakeFiles/ChessEngineOOP.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles --progress-num=1,2,3,4,5,6,7 "Finished codegen for target ChessEngineOOP"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ACER\Documents\GitHub\Chess-\build\CMakeFiles --progress-num=1,2,3,4,5,6 "Finished codegen for target ChessEngineOOP"
 .PHONY : CMakeFiles/ChessEngineOOP.dir/codegen
 
 # clean rule for target.

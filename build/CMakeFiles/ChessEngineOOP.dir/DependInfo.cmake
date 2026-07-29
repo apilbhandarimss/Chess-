@@ -11,7 +11,6 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/ACER/Documents/GitHub/Chess-/src/Board.cpp" "CMakeFiles/ChessEngineOOP.dir/src/Board.cpp.obj" "gcc" "CMakeFiles/ChessEngineOOP.dir/src/Board.cpp.obj.d"
   "C:/Users/ACER/Documents/GitHub/Chess-/src/Engine.cpp" "CMakeFiles/ChessEngineOOP.dir/src/Engine.cpp.obj" "gcc" "CMakeFiles/ChessEngineOOP.dir/src/Engine.cpp.obj.d"
   "C:/Users/ACER/Documents/GitHub/Chess-/src/Evaluator.cpp" "CMakeFiles/ChessEngineOOP.dir/src/Evaluator.cpp.obj" "gcc" "CMakeFiles/ChessEngineOOP.dir/src/Evaluator.cpp.obj.d"
-  "C:/Users/ACER/Documents/GitHub/Chess-/src/Piece.cpp" "CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj" "gcc" "CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj.d"
   "C:/Users/ACER/Documents/GitHub/Chess-/src/RuleChecker.cpp" "CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj" "gcc" "CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj.d"
   "C:/Users/ACER/Documents/GitHub/Chess-/src/main.cpp" "CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj" "gcc" "CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj.d"
   )

@@ -10,6 +10,43 @@
 const int SCREEN_WIDTH  = 1500;
 const int SCREEN_HEIGHT = 1080;
 
+enum GameMode
+{
+    MODE_NONE,
+    MODE_PVP,
+    MODE_VS_BLACK_BOT,
+    MODE_VS_WHITE_BOT,
+};
+
+GameMode drawMenu()
+{
+    const Rectangle pvpBtn      = { 550, 350, 400, 80 };
+    const Rectangle vsBotBlkBtn = { 550, 460, 400, 80 };
+    const Rectangle vsBotWhtBtn = { 550, 570, 400, 80 };
+
+    BeginDrawing();
+    ClearBackground({ 30, 31, 34, 255 });
+    DrawText("Chess Engine", 580, 200, 48, WHITE);
+
+    DrawRectangleRec(pvpBtn,      { 60, 60, 60, 255 });
+    DrawText("1)  Player vs Player",  575, 378, 26, WHITE);
+    DrawRectangleRec(vsBotBlkBtn, { 60, 60, 60, 255 });
+    DrawText("2)  Play vs Black Bot", 575, 488, 26, WHITE);
+    DrawRectangleRec(vsBotWhtBtn, { 60, 60, 60, 255 });
+    DrawText("3)  Play vs White Bot", 575, 598, 26, WHITE);
+
+    EndDrawing();
+
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        Vector2 m = GetMousePosition();
+        if (CheckCollisionPointRec(m, pvpBtn))      return MODE_PVP;
+        if (CheckCollisionPointRec(m, vsBotBlkBtn)) return MODE_VS_BLACK_BOT;
+        if (CheckCollisionPointRec(m, vsBotWhtBtn)) return MODE_VS_WHITE_BOT;
+    }
+    return MODE_NONE;
+}
+
 void LoadPieceTextures()
 {
     const std::vector<std::pair<std::string, std::string>> paths = {
@@ -60,7 +97,6 @@ bool isStalemate(const Board& board, bool whiteToMove)
 char handlePromotionDialog(bool promotingWhite)
 {
     DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Fade(BLACK, 0.55f));
-
     DrawRectangle(450, 250, 600, 350, DARKGRAY);
     DrawRectangleLines(450, 250, 600, 350, WHITE);
     DrawText("Promote Pawn", 610, 270, 30, WHITE);
@@ -75,15 +111,13 @@ char handlePromotionDialog(bool promotingWhite)
     DrawRectangleRec(bishopBtn, LIGHTGRAY); DrawText("Bishop", 530, 510, 25, BLACK);
     DrawRectangleRec(knightBtn, LIGHTGRAY); DrawText("Knight", 800, 510, 25, BLACK);
 
-    if (!IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        return '\0';
+    if (!IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) return '\0';
 
     Vector2 mouse = GetMousePosition();
     if (CheckCollisionPointRec(mouse, queenBtn))  return promotingWhite ? 'Q' : 'q';
     if (CheckCollisionPointRec(mouse, rookBtn))   return promotingWhite ? 'R' : 'r';
     if (CheckCollisionPointRec(mouse, bishopBtn)) return promotingWhite ? 'B' : 'b';
     if (CheckCollisionPointRec(mouse, knightBtn)) return promotingWhite ? 'N' : 'n';
-
     return '\0';
 }
 
@@ -98,30 +132,55 @@ void drawOverlayMessage(const Board& board, const char* msg)
 
 int main()
 {
-    Board board;
-
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Chess Engine");
     SetTargetFPS(60);
     LoadPieceTextures();
+
+    GameMode mode = MODE_NONE;
+    while (!WindowShouldClose() && mode == MODE_NONE)
+        mode = drawMenu();
+
+    Board board;
 
     while (!WindowShouldClose())
     {
         if (isCheckmate(board, board.whiteturn))
         {
-            const char* msg = board.whiteturn ? "Black wins by checkmate!" : "White wins by checkmate!";
+            const char* msg = board.whiteturn ? "Black wins by checkmate!"
+                                              : "White wins by checkmate!";
             drawOverlayMessage(board, msg);
             continue;
         }
-
         if (isStalemate(board, board.whiteturn))
         {
             drawOverlayMessage(board, "Stalemate - Draw!");
             continue;
         }
 
-        if (!board.isPromoting)
-            move(board);
+        
+        bool botShouldMove =
+            (mode == MODE_VS_BLACK_BOT && !board.whiteturn) ||
+            (mode == MODE_VS_WHITE_BOT &&  board.whiteturn);
 
+        if (botShouldMove && !board.isPromoting)
+        {
+            Board newBoard     = engineMove(board);
+            newBoard.whiteturn = !board.whiteturn;
+            board              = newBoard;
+            goto render;
+        }
+
+        {
+            bool humanShouldMove =
+                (mode == MODE_PVP) ||
+                (mode == MODE_VS_BLACK_BOT &&  board.whiteturn) ||
+                (mode == MODE_VS_WHITE_BOT && !board.whiteturn);
+
+            if (humanShouldMove && !board.isPromoting)
+                move(board);
+        }
+
+        render:
         BeginDrawing();
         ClearBackground(BLACK);
         drawBoard(board);
@@ -132,10 +191,10 @@ int main()
             if (chosen != '\0')
             {
                 board.squares[board.promotionRow][board.promotionCol] = chosen;
-                board.isPromoting = false;
+                board.isPromoting  = false;
                 board.promotionRow = -1;
                 board.promotionCol = -1;
-                board.whiteturn = !board.whiteturn;
+                board.whiteturn    = !board.whiteturn;
             }
         }
 

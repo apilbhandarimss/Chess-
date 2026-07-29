@@ -200,30 +200,6 @@ src/Evaluator.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessEngineOOP.dir\build.make CMakeFiles/ChessEngineOOP.dir/src/Evaluator.cpp.s
 .PHONY : src/Evaluator.cpp.s
 
-src/Piece.obj: src/Piece.cpp.obj
-.PHONY : src/Piece.obj
-
-# target to build an object file
-src/Piece.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessEngineOOP.dir\build.make CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj
-.PHONY : src/Piece.cpp.obj
-
-src/Piece.i: src/Piece.cpp.i
-.PHONY : src/Piece.i
-
-# target to preprocess a source file
-src/Piece.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessEngineOOP.dir\build.make CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.i
-.PHONY : src/Piece.cpp.i
-
-src/Piece.s: src/Piece.cpp.s
-.PHONY : src/Piece.s
-
-# target to generate assembly for a file
-src/Piece.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessEngineOOP.dir\build.make CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.s
-.PHONY : src/Piece.cpp.s
-
 src/RuleChecker.obj: src/RuleChecker.cpp.obj
 .PHONY : src/RuleChecker.obj
 
@@ -290,9 +266,6 @@ help:
 	@echo ... src/Evaluator.obj
 	@echo ... src/Evaluator.i
 	@echo ... src/Evaluator.s
-	@echo ... src/Piece.obj
-	@echo ... src/Piece.i
-	@echo ... src/Piece.s
 	@echo ... src/RuleChecker.obj
 	@echo ... src/RuleChecker.i
 	@echo ... src/RuleChecker.s

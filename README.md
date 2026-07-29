@@ -1,34 +1,101 @@
 # Chess Engine in C++ using Raylib
 
-## Overview
+# Overview
 
-This project is a simple object-oriented chess engine developed in **C++** using the **Raylib** graphics library. The project demonstrates the implementation of a graphical chessboard, piece rendering, user interaction, and basic chess move validation.
+This project is an object-oriented chess engine written in **C++** using the **Raylib** graphics library. The project implements a complete graphical chess game together with the foundation of a real chess engine.
 
-The engine currently focuses on building the core architecture of a chess engine. Players can move pieces using the mouse, and the program validates moves before updating the board. At the current stage, pawn movement has been implemented as the first legal piece movement, providing a foundation for adding the remaining chess rules.
+The application supports human vs human and human vs AI gameplay, validates legal chess moves, detects checkmate and stalemate, performs pawn promotion, and includes a Minimax search engine with a tapered positional evaluation based on PeSTO piece-square tables.
+
+The project is designed with modularity in mind, making it easy to extend with stronger search algorithms and more advanced evaluation techniques.
 
 ---
 
 # Objectives
 
-* Implement a chess board using Object-Oriented Programming.
-* Display chess pieces using Raylib textures.
-* Allow users to move pieces using the mouse.
-* Validate legal moves before updating the board.
-* Build a modular architecture that can easily be expanded into a complete chess engine.
+- Build a modular chess engine using Object-Oriented Programming.
+- Implement complete chess rules.
+- Develop a graphical interface using Raylib.
+- Implement a working AI using Minimax.
+- Create a strong positional evaluation function.
+- Provide a clean architecture for future engine improvements.
 
 ---
 
 # Features
 
-* Graphical chess board using Raylib
-* Mouse-based piece selection
-* Piece movement
-* Turn management
-* Legal move validation
-* Pawn movement implementation
-* Texture-based chess pieces
-* Object-oriented code structure
-* Easy to extend with additional chess rules
+## Graphical Interface
+
+- Raylib-based GUI
+- Wooden chess piece textures
+- Mouse-based piece movement
+- Interactive promotion dialog
+- Main menu
+- Endgame overlay messages
+
+---
+
+## Game Modes
+
+- Player vs Player
+- Player vs Black AI
+- Player vs White AI
+
+---
+
+## Chess Rules
+
+Implemented:
+
+- Pawn movement
+- Pawn captures
+- Knight movement
+- Bishop movement
+- Rook movement
+- Queen movement
+- King movement
+- Castling
+- Pawn promotion
+- Check detection
+- Checkmate detection
+- Stalemate detection
+- Turn management
+- Illegal move prevention
+
+Engine search automatically promotes pawns to queens.
+
+---
+
+## Chess Engine
+
+Implemented:
+
+- Legal move generation
+- Recursive Minimax search
+- Depth-limited search
+- Automatic move selection
+- Checkmate scoring
+- Stalemate evaluation
+
+---
+
+## Evaluation Function
+
+Current evaluator includes:
+
+- Material evaluation
+- Midgame piece values
+- Endgame piece values
+- Piece-Square Tables (PeSTO)
+- Positional scoring
+- Game phase calculation
+- Midgame / Endgame interpolation
+
+Evaluation considers:
+
+- Material advantage
+- Piece placement
+- Opening vs endgame differences
+- Automatic transition between game phases
 
 ---
 
@@ -37,34 +104,28 @@ The engine currently focuses on building the core architecture of a chess engine
 ```
 ChessEngine/
 │
-├── main.cpp
-├── Board.cpp
-├── Board.h
-├── RuleChecker.cpp
-├── RuleChecker.h
+├── include/
+│   ├── Board.h
+│   ├── Engine.h
+│   ├── Evaluator.h
+│   └── RuleChecker.h
+│
+├── src/
+│   ├── main.cpp
+│   ├── Board.cpp
+│   ├── Engine.cpp
+│   ├── Evaluator.cpp
+│   └── RuleChecker.cpp
 │
 ├── 3d_wood/
-│   ├── wp.png
-│   ├── wr.png
-│   ├── wn.png
-│   ├── wb.png
-│   ├── wq.png
-│   ├── wk.png
-│   ├── bp.png
-│   ├── br.png
-│   ├── bn.png
-│   ├── bb.png
-│   ├── bq.png
-│   └── bk.png
 │
+├── CMakeLists.txt
 └── README.md
 ```
 
 ---
 
 # Program Flow
-
-The application follows the following execution sequence:
 
 ```
 Start Program
@@ -76,22 +137,35 @@ Create Window
 Load Piece Textures
       │
       ▼
-Initialize Chess Board
+Display Main Menu
       │
       ▼
-Game Loop
+Select Game Mode
       │
-      ├── Detect Mouse Click
+      ▼
+Initialize Board
       │
-      ├── Select Piece
+      ▼
+Main Game Loop
       │
-      ├── Attempt Move
+      ├── Check Game State
+      │       │
+      │       ├── Checkmate?
+      │       └── Stalemate?
+      │
+      ├── AI Turn?
+      │       │
+      │       └── Engine Search
+      │
+      ├── Human Input
       │
       ├── Validate Move
       │
       ├── Update Board
       │
-      └── Draw Board
+      ├── Promotion
+      │
+      └── Render Board
       │
       ▼
 Close Window
@@ -103,101 +177,77 @@ Close Window
 
 ## main.cpp
 
-This file contains the entry point of the application.
+Responsible for:
 
-Responsibilities include:
-
-* Creating the game window
-* Loading textures
-* Creating the Board object
-* Running the game loop
-* Calling movement logic
-* Rendering the chess board
-* Releasing textures before closing
-
----
-
-## Board.h
-
-Defines the Board class.
-
-Contains:
-
-* Chess board representation
-* Current player's turn
-* Function declarations
+- Window creation
+- Texture loading
+- Main menu
+- Game loop
+- AI integration
+- Promotion dialog
+- Rendering
+- Game-over detection
 
 ---
 
 ## Board.cpp
 
-Responsible for all board-related operations.
+Responsible for:
 
-Functions include:
-
-### Board Constructor
-
-Initializes the board.
-
-### initl()
-
-Places every chess piece in its standard starting position.
-
-### drawBoard()
-
-Draws:
-
-* Chess board
-* Chess pieces
-* Sidebar
-
-### move()
-
-Handles player interaction.
-
-Its responsibilities include:
-
-* Detecting mouse clicks
-* Selecting pieces
-* Deselecting pieces
-* Moving pieces
-* Calling the move validator
-* Switching turns
-
----
-
-## RuleChecker.h
-
-Contains function declarations related to move validation.
+- Board representation
+- Piece rendering
+- Mouse interaction
+- Piece movement
+- Turn switching
+- Promotion state
 
 ---
 
 ## RuleChecker.cpp
 
-Implements the chess rules.
+Responsible for all chess rules.
 
-Currently implemented:
+Includes:
 
-* White pawn one-square movement
-* White pawn two-square opening move
-* Black pawn one-square movement
-* Black pawn two-square opening move
+- Piece movement validation
+- Check detection
+- Castling validation
+- Promotion handling
+- Legal move verification
 
-The file compares two board states to determine:
+---
 
-* Source square
-* Destination square
-* Piece being moved
+## Engine.cpp
 
-After identifying the move, the function checks whether it follows the implemented chess rules.
+Contains the chess engine.
+
+Implements:
+
+- Move generation
+- Minimax search
+- Engine move selection
+- Automatic queen promotion during search
+
+---
+
+## Evaluator.cpp
+
+Responsible for board evaluation.
+
+Implements:
+
+- Material evaluation
+- Piece-square tables
+- Midgame evaluation
+- Endgame evaluation
+- Phase interpolation
+- Final positional score
 
 ---
 
 # Board Representation
 
 The chess board is stored as an 8×8 character array.
-
-Example:
 
 ```
 r n b q k b n r
@@ -210,127 +260,166 @@ P P P P P P P P
 R N B Q K B N R
 ```
 
-Uppercase letters represent white pieces.
+Uppercase letters represent White pieces.
 
-Lowercase letters represent black pieces.
+Lowercase letters represent Black pieces.
 
-| Character | Piece        |
-| --------- | ------------ |
-| P         | White Pawn   |
-| R         | White Rook   |
-| N         | White Knight |
-| B         | White Bishop |
-| Q         | White Queen  |
-| K         | White King   |
-| p         | Black Pawn   |
-| r         | Black Rook   |
-| n         | Black Knight |
-| b         | Black Bishop |
-| q         | Black Queen  |
-| k         | Black King   |
-| Space     | Empty Square |
+| Character | Piece |
+|-----------|-------|
+| P | White Pawn |
+| N | White Knight |
+| B | White Bishop |
+| R | White Rook |
+| Q | White Queen |
+| K | White King |
+| p | Black Pawn |
+| n | Black Knight |
+| b | Black Bishop |
+| r | Black Rook |
+| q | Black Queen |
+| k | Black King |
 
 ---
 
-# Piece Textures
+# Engine Search
 
-Each chess piece uses a PNG texture stored inside the **3d_wood** folder.
-
-Example mapping:
+Current search algorithm:
 
 ```
-white_pawn   -> wp.png
-white_rook   -> wr.png
-white_knight -> wn.png
-white_bishop -> wb.png
-white_queen  -> wq.png
-white_king   -> wk.png
-
-black_pawn   -> bp.png
-black_rook   -> br.png
-black_knight -> bn.png
-black_bishop -> bb.png
-black_queen  -> bq.png
-black_king   -> bk.png
+Current Position
+       │
+       ▼
+Generate Legal Moves
+       │
+       ▼
+For Each Move
+       │
+       ▼
+Minimax Search
+       │
+       ▼
+Evaluate Position
+       │
+       ▼
+Choose Best Move
 ```
 
-Textures are loaded once at startup and unloaded before the application exits.
+Current search depth:
+
+```
+4 plies
+```
 
 ---
 
-# Mouse Interaction
+# Evaluation Pipeline
 
-The movement system follows these steps:
-
-1. Player clicks a piece.
-2. The piece becomes selected.
-3. Player clicks the destination square.
-4. A temporary board is created.
-5. The move is applied to the temporary board.
-6. The move is validated.
-7. If valid, the actual board is updated.
-8. The turn switches to the opposite player.
+```
+Board
+   │
+   ▼
+Material Score
+   │
+   ▼
+Piece-Square Tables
+   │
+   ▼
+Midgame Score
+   │
+   ▼
+Endgame Score
+   │
+   ▼
+Game Phase Calculation
+   │
+   ▼
+Tapered Evaluation
+   │
+   ▼
+Final Score
+```
 
 ---
 
-# Implemented Rules
+# Current Evaluation Components
 
-Current implementation supports:
+✔ Material values
 
-* White pawn single move
-* White pawn double opening move
-* Black pawn single move
-* Black pawn double opening move
-* Turn-based movement
-* Piece selection
-* Move cancellation by clicking the selected piece again
+✔ Piece-square tables
 
----
+✔ Midgame evaluation
 
-# Future Improvements
+✔ Endgame evaluation
 
-Planned features include:
+✔ Tapered evaluation
 
-* Rook movement
-* Knight movement
-* Bishop movement
-* Queen movement
-* King movement
-* Pawn captures
-* En passant
-* Pawn promotion
-* Castling
-* Check detection
-* Checkmate detection
-* Stalemate detection
-* Undo move
-* Move history
-* Board evaluation
-* Minimax search
-* Alpha-Beta pruning
-* FEN support
-* PGN support
+✔ Positional bonuses
 
 ---
 
 # Technologies Used
 
-* C++
-* Raylib
-* Object-Oriented Programming (OOP)
+- C++
+- Raylib
+- CMake
+- Object-Oriented Programming
 
 ---
 
-# How to Run
+# Future Improvements
 
-1. Install Raylib.
-2. Clone the repository.
-3. Build the project using your preferred compiler or CMake.
-4. Ensure the **3d_wood** folder is located beside the executable.
-5. Run the program.
+## Search
+
+- Alpha-Beta Pruning
+- Iterative Deepening
+- Quiescence Search
+- Transposition Tables
+- Zobrist Hashing
+- Killer Move Heuristic
+- History Heuristic
+
+## Evaluation
+
+- Mobility evaluation
+- Passed pawns
+- Isolated pawns
+- Doubled pawns
+- Backward pawns
+- Bishop pair bonus
+- Connected rooks
+- Open files
+- Semi-open files
+- King safety
+- Pawn shield
+- Piece mobility
+- Hanging piece detection
+- Static Exchange Evaluation (SEE)
+
+## Features
+
+- Undo/Redo
+- Move history
+- PGN support
+- FEN support
+- UCI protocol
+- Opening book
+- Endgame tablebases
+
+---
+
+# How to Build
+
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
+
+Ensure the **3d_wood** directory is copied beside the executable before running.
 
 ---
 
 # Conclusion
 
-This project serves as the foundation of a complete chess engine developed using C++ and Raylib. It demonstrates object-oriented design, graphical rendering, user interaction, and move validation while maintaining a modular structure that can be extended with additional chess rules, search algorithms, and engine features.
+This project has evolved from a simple chess GUI into a functional chess engine capable of playing complete games. It combines legal move generation, graphical interaction, and a Minimax-based AI with a tapered positional evaluation using PeSTO piece-square tables. The modular architecture provides a solid foundation for implementing stronger search algorithms, advanced evaluation heuristics, and competitive engine features in future development.

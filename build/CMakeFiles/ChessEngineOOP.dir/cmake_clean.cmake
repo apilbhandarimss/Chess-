@@ -5,8 +5,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/ChessEngineOOP.dir/src/Engine.cpp.obj.d"
   "CMakeFiles/ChessEngineOOP.dir/src/Evaluator.cpp.obj"
   "CMakeFiles/ChessEngineOOP.dir/src/Evaluator.cpp.obj.d"
-  "CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj"
-  "CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj.d"
   "CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj"
   "CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj.d"
   "CMakeFiles/ChessEngineOOP.dir/src/main.cpp.obj"

@@ -19,12 +19,6 @@
 },
 {
   "directory": "C:/Users/ACER/Documents/GitHub/Chess-/build",
-  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/ChessEngineOOP.dir/includes_CXX.rsp -g -std=gnu++17 -IC:/msys64/mingw64/bin/../include -o CMakeFiles\\ChessEngineOOP.dir\\src\\Piece.cpp.obj -c C:\\Users\\ACER\\Documents\\GitHub\\Chess-\\src\\Piece.cpp",
-  "file": "C:/Users/ACER/Documents/GitHub/Chess-/src/Piece.cpp",
-  "output": "CMakeFiles/ChessEngineOOP.dir/src/Piece.cpp.obj"
-},
-{
-  "directory": "C:/Users/ACER/Documents/GitHub/Chess-/build",
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/ChessEngineOOP.dir/includes_CXX.rsp -g -std=gnu++17 -IC:/msys64/mingw64/bin/../include -o CMakeFiles\\ChessEngineOOP.dir\\src\\RuleChecker.cpp.obj -c C:\\Users\\ACER\\Documents\\GitHub\\Chess-\\src\\RuleChecker.cpp",
   "file": "C:/Users/ACER/Documents/GitHub/Chess-/src/RuleChecker.cpp",
   "output": "CMakeFiles/ChessEngineOOP.dir/src/RuleChecker.cpp.obj"
