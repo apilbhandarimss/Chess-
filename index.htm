@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chess Engine - Dev Docs</title>
+<style>
+  body {
+    background: #ffffff;
+    color: #000000;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+  }
+
+  a { color: #0000EE; }
+  a:visited { color: #551A8B; }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0 20px;
+  }
+  th, td {
+    border: 1px solid #000000;
+    padding: 4px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #cccccc; font-weight: bold; }
+
+  code, pre {
+    font-family: "Courier New", Courier, monospace;
+  }
+  pre {
+    border: 1px solid #000000;
+    padding: 10px;
+    background: #f0f0f0;
+    overflow-x: auto;
+  }
+  code {
+    background: #f0f0f0;
+    padding: 0 2px;
+    border: 1px solid #999999;
+  }
+
+  hr { border: none; border-top: 2px solid #000000; margin: 20px 0; }
+
+  h1, h2, h3 { font-weight: bold; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 20px; text-decoration: underline; }
+  h3 { font-size: 16px; }
+
+  ul.checklist { list-style: none; padding-left: 0; }
+  ul.checklist li:before { content: "[x] "; }
+  ul.checklist li.future:before { content: "[ ] "; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+  .navtable { border: 1px solid #000000; width: 100%; margin-bottom: 20px; }
+  .navtable td { border: none; padding: 2px 10px; }
+
+  .center { text-align: center; }
+
+  .stat-table td { text-align: center; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<center>
+<h1>=== CHESS ENGINE ===</h1>
+<p><i>Documentation</i></p>
+<p>C++ &nbsp;|&nbsp; Raylib &nbsp;|&nbsp; Minimax</p>
+</center>
+
+<hr>
+
+<center>
+<table class="navtable">
+<tr>
+<td><b>NAVIGATION:</b></td>
+<td><a href="#overview">Overview</a></td>
+<td><a href="#architecture">Architecture</a></td>
+<td><a href="#build">Build</a></td>
+<td><a href="#board">Board</a></td>
+<td><a href="#rulechecker">RuleChecker</a></td>
+<td><a href="#engine">Engine</a></td>
+<td><a href="#evaluator">Evaluator</a></td>
+<td><a href="#main">Main</a></td>
+<td><a href="#session1">Dev Log</a></td>
+<td><a href="#board-repr">Board Repr</a></td>
+<td><a href="#future">Future</a></td>
+</tr>
+</table>
+</center>
+
+<hr>
+
+<!-- OVERVIEW -->
+<h2><a name="overview">1. OVERVIEW</a></h2>
+<p>
+A complete object-oriented chess engine written in C++ with Raylib graphics,
+full legal-move validation, Minimax AI with PeSTO tapered evaluation, and
+three game modes.
+</p>
+
+<table class="stat-table">
+<tr><th>Sessions</th><th>Modules</th><th>Search Depth</th><th>Eval Function</th><th>Game Modes</th></tr>
+<tr><td>6</td><td>5</td><td>4 ply</td><td>PeSTO</td><td>3</td></tr>
+</table>
+
+<hr>
+
+<!-- ARCHITECTURE -->
+<h2><a name="architecture">2. ARCHITECTURE</a></h2>
+<p>The project is split into four independent modules, each with a header and
+implementation file, orchestrated by <code>main.cpp</code>.</p>
+
+<table>
+<tr><th>Module</th><th>Description</th></tr>
+<tr><td><b>Board</b></td><td>Board representation, rendering, and mouse-based piece movement. Owns the 8x8 character grid and all game-state flags.</td></tr>
+<tr><td><b>RuleChecker</b></td><td>Legal move validation for all six piece types. Handles castling, en passant, check detection, and self-check prevention.</td></tr>
+<tr><td><b>Engine</b></td><td>Move generation and recursive Minimax search. Selects the best move for the AI side at depth 4 plies.</td></tr>
+<tr><td><b>Evaluator</b></td><td>PeSTO tapered evaluation: material values, midgame and endgame piece-square tables, and phase-interpolated scoring.</td></tr>
+</table>
+
+<h3>Module Dependency Graph</h3>
+<pre>
+main.cpp
+  |-- Board          (rendering, input, game state)
+  |-- RuleChecker     (move legality)
+  |-- Engine          (AI search)
+  |     |-- RuleChecker  (generates legal moves)
+  |     |-- Evaluator    (scores positions)
+  |-- Evaluator       (called at leaf nodes)
+</pre>
+
+<hr>
+
+<!-- BUILD -->
+<h2><a name="build">3. HOW TO BUILD</a></h2>
+<p>The project uses CMake. Ensure Raylib is installed and the
+<code>3d_wood/</code> texture directory sits beside the final executable.</p>
+<pre>mkdir build
+cd build
+cmake ..
+cmake --build .</pre>
+<p><b>NOTE:</b> The <code>3d_wood/</code> directory must be copied next to
+the compiled binary before running. It contains the 12 PNG textures for each
+chess piece.</p>
+
+<hr>
+
+<!-- BOARD -->
+<h2><a name="board">4. BOARD MODULE</a></h2>
+<p><code>Board.cpp</code> / <code>Board.h</code> - Visual and interaction
+layer between the user and the chess rule engine.</p>
+
+<h3>Board Class Members</h3>
+<table>
+<tr><th>Member</th><th>Type</th><th>Purpose</th></tr>
+<tr><td><code>squares[8][8]</code></td><td><code>char</code></td><td>The 8x8 board grid</td></tr>
+<tr><td><code>whiteturn</code></td><td><code>bool</code></td><td>Whose turn it is</td></tr>
+<tr><td><code>whiteKingMoved</code></td><td><code>bool</code></td><td>Castling flag - white king</td></tr>
+<tr><td><code>whiteRookAMoved</code></td><td><code>bool</code></td><td>Castling flag - a-file rook</td></tr>
+<tr><td><code>whiteRookHMoved</code></td><td><code>bool</code></td><td>Castling flag - h-file rook</td></tr>
+<tr><td><code>blackKingMoved</code></td><td><code>bool</code></td><td>Castling flag - black king</td></tr>
+<tr><td><code>blackRookAMoved/HMoved</code></td><td><code>bool</code></td><td>Castling flags - black rooks</td></tr>
+<tr><td><code>enPassantRow/Col</code></td><td><code>int</code></td><td>En passant target square</td></tr>
+<tr><td><code>isPromoting</code></td><td><code>bool</code></td><td>Promotion dialog active</td></tr>
+<tr><td><code>promotionRow/Col</code></td><td><code>int</code></td><td>Square of pawn to promote</td></tr>
+</table>
+
+<h3>Key Functions</h3>
+<table>
+<tr><th>Function</th><th>Description</th></tr>
+<tr><td><code>initl()</code></td><td>Resets board to the standard starting position and clears all state flags.</td></tr>
+<tr><td><code>drawBoard(board)</code></td><td>Renders all 64 squares, piece textures, and the sidebar using Raylib.</td></tr>
+<tr><td><code>move(board)</code></td><td>Handles mouse clicks: selects a piece, creates a temporary candidate board, validates via RuleChecker, and applies if legal.</td></tr>
+</table>
+
+<h3>Move Flow</h3>
+<pre>
+Mouse Click
+  |
+Inside Board?  --  No  --  ignore
+  | Yes
+Piece Selected?
+  |-- No  --  select piece (own color only)
+  |-- Yes
+       |
+       Clone Board -> apply move
+       |
+       isValidMove(old, new)
+       |-- Invalid  --  discard clone
+       |-- Valid    --  replace board, switch turn
+                     |
+                 Promotion?  --  open dialog
+</pre>
+
+<h3>Visual Color Scheme</h3>
+<table>
+<tr><th>Constant</th><th>Purpose</th></tr>
+<tr><td><code>COLOR_LIGHT_SQ</code></td><td>Light chess squares (cream)</td></tr>
+<tr><td><code>COLOR_DARK_SQ</code></td><td>Dark chess squares (brown)</td></tr>
+<tr><td><code>COLOR_BOARD_BG</code></td><td>Application background</td></tr>
+<tr><td><code>COLOR_SIDEBAR</code></td><td>Panel beside the board</td></tr>
+<tr><td><code>COLOR_HIGHLIGHT_LEGAL</code></td><td>Legal move dots (green)</td></tr>
+<tr><td><code>COLOR_HIGHLIGHT_CAPTURE</code></td><td>Capturable squares (red)</td></tr>
+<tr><td><code>COLOR_CHECK</code></td><td>King in check (red glow)</td></tr>
+</table>
+
+<hr>
+
+<!-- RULE CHECKER -->
+<h2><a name="rulechecker">5. RULECHECKER MODULE</a></h2>
+<p><code>RuleChecker.cpp</code> / <code>RuleChecker.h</code> - Validates
+every legal chess move including special rules. Called by both the human
+input handler and the engine's move generator.</p>
+
+<h3>Public API</h3>
+<table>
+<tr><th>Function</th><th>Signature</th><th>Returns</th></tr>
+<tr><td>Piece ownership</td><td><code>isWhitePiece(char)</code></td><td>True if A-Z</td></tr>
+<tr><td>Piece ownership</td><td><code>isBlackPiece(char)</code></td><td>True if a-z</td></tr>
+<tr><td>Check detection</td><td><code>isKingInCheck(board, bool)</code></td><td>True if king is attacked</td></tr>
+<tr><td>Move validation</td><td><code>isValidMove(old, new)</code></td><td>True if move is fully legal</td></tr>
+</table>
+
+<h3>Internal Helpers</h3>
+<table>
+<tr><th>Helper</th><th>Used By</th></tr>
+<tr><td><code>isPathClearStraight()</code></td><td>Rook, Queen horizontal/vertical</td></tr>
+<tr><td><code>isPathClearDiagonal()</code></td><td>Bishop, Queen diagonal</td></tr>
+</table>
+
+<h3>Validation Pipeline</h3>
+<pre>
+Detect moved piece   (compare old vs new board square-by-square)
+  |
+Find source / destination
+  |
+Apply piece-specific rules
+  Pawn   -> forward move, double-push, diagonal capture, en passant
+  Knight -> L-shape (no path check needed)
+  Bishop -> diagonal + isPathClearDiagonal()
+  Rook   -> straight + isPathClearStraight()
+  Queen  -> both of the above
+  King   -> 1-square any direction, castling validation
+  |
+isKingInCheck(newBoard, side)   &lt;- self-check prevention
+  |
+Return true / false
+</pre>
+
+<h3>Castling Conditions (all must be true)</h3>
+<ul class="checklist">
+<li>King has never moved (<code>whiteKingMoved / blackKingMoved == false</code>)</li>
+<li>Correct rook has never moved (<code>whiteRookAMoved / whiteRookHMoved</code>)</li>
+<li>All squares between king and rook are empty</li>
+<li>King is not currently in check</li>
+<li>The king's transit square is not under attack</li>
+</ul>
+
+<hr>
+
+<!-- ENGINE -->
+<h2><a name="engine">6. ENGINE MODULE</a></h2>
+<p><code>Engine.cpp</code> / <code>Engine.h</code> - Move generation and
+Minimax search. Produces the AI's chosen move at a configurable depth.</p>
+
+<h3>Functions</h3>
+<table>
+<tr><th>Function</th><th>Description</th></tr>
+<tr><td><code>generateMoves(board, forWhite)</code></td><td>Iterates all 64x64 from/to combinations, filters through <code>isValidMove()</code>, auto-promotes pawns to queens.</td></tr>
+<tr><td><code>minimax(board, depth, isWhite)</code></td><td>Recursive Minimax. Returns <code>evaluate(board)</code> at depth 0; +/-9999 for checkmate; 0 for stalemate.</td></tr>
+<tr><td><code>engineMove(board)</code></td><td>Top-level call - generates moves, runs Minimax at depth 4, returns the best board state.</td></tr>
+</table>
+
+<h3>Search Algorithm</h3>
+<pre>
+engineMove(board)
+  |
+generateMoves()   ->  list of candidate board states
+  |
+for each candidate:
+    minimax(candidate, depth=3, opponent)
+      |-- depth 0  ->  evaluate(board)
+      |-- no moves ->  checkmate (+/-9999) or stalemate (0)
+  |
+Pick highest score (White) / lowest score (Black)
+</pre>
+
+<h3>Terminal State Scores</h3>
+<table>
+<tr><th>Situation</th><th>Score</th></tr>
+<tr><td>Checkmate against the maximizing player</td><td>-9999</td></tr>
+<tr><td>Checkmate against the minimizing player</td><td>+9999</td></tr>
+<tr><td>Stalemate</td><td>0</td></tr>
+</table>
+
+<p><b>NOTE:</b> The engine auto-promotes pawns to queens during search to
+avoid branching on promotion choices, which would multiply the search tree
+significantly.</p>
+
+<hr>
+
+<!-- EVALUATOR -->
+<h2><a name="evaluator">7. EVALUATOR MODULE</a></h2>
+<p><code>Evaluator.cpp</code> / <code>Evaluator.h</code> - PeSTO tapered
+evaluation. Returns a centipawn score (positive = White advantage).</p>
+
+<h3>Material Values</h3>
+<table>
+<tr><th>Piece</th><th>Midgame</th><th>Endgame</th></tr>
+<tr><td>Pawn</td><td>82</td><td>94</td></tr>
+<tr><td>Knight</td><td>337</td><td>281</td></tr>
+<tr><td>Bishop</td><td>365</td><td>297</td></tr>
+<tr><td>Rook</td><td>477</td><td>512</td></tr>
+<tr><td>Queen</td><td>1025</td><td>936</td></tr>
+<tr><td>King</td><td>0</td><td>0</td></tr>
+</table>
+
+<h3>Tapered Evaluation Formula</h3>
+<pre>phase = sum PhaseWeight[piece]   // per piece on board (max 24)
+score = (mgScore * phase + egScore * (24 - phase)) / 24</pre>
+<p>Phase weights: Knight=1, Bishop=1, Rook=2, Queen=4. As pieces are traded
+off, the score smoothly interpolates from midgame tables to endgame
+tables.</p>
+
+<h3>Piece-Square Tables</h3>
+<p>Each piece has separate 8x8 bonus tables for midgame and endgame. Black's
+tables are mirrored vertically (<code>row = 7 - row</code>) so the same
+tables apply symmetrically.</p>
+<table>
+<tr><th>Piece</th><th>Table pair</th></tr>
+<tr><td>Pawn</td><td><code>MgPawnTable / EgPawnTable</code></td></tr>
+<tr><td>Knight</td><td><code>MgKnightTable / EgKnightTable</code></td></tr>
+<tr><td>Bishop</td><td><code>MgBishopTable / EgBishopTable</code></td></tr>
+<tr><td>Rook</td><td><code>MgRookTable / EgRookTable</code></td></tr>
+<tr><td>Queen</td><td><code>MgQueenTable / EgQueenTable</code></td></tr>
+<tr><td>King</td><td><code>MgKingTable / EgKingTable</code></td></tr>
+</table>
+
+<hr>
+
+<!-- MAIN -->
+<h2><a name="main">8. MAIN MODULE</a></h2>
+<p><code>main.cpp</code> - Application entry point. Coordinates window
+lifecycle, asset loading, the game loop, and delegates to all other
+modules.</p>
+
+<h3>Game Modes</h3>
+<table>
+<tr><th>Enum value</th><th>Description</th></tr>
+<tr><td><code>MODE_PVP</code></td><td>Player vs Player - both sides are human</td></tr>
+<tr><td><code>MODE_VS_BLACK_BOT</code></td><td>Human plays White, AI plays Black</td></tr>
+<tr><td><code>MODE_VS_WHITE_BOT</code></td><td>AI plays White, Human plays Black</td></tr>
+</table>
+
+<h3>Game Loop</h3>
+<pre>
+while(!WindowShouldClose)
+  |-- isCheckmate()  ->  show overlay, freeze
+  |-- isStalemate()  ->  show overlay, freeze
+  |-- Bot turn?      ->  engineMove() -> update board
+  |-- Human turn?    ->  move() -> handle click
+  |-- BeginDrawing()
+         drawBoard()
+         handlePromotionDialog()  (if isPromoting)
+         EndDrawing()
+</pre>
+
+<h3>Helper Functions</h3>
+<table>
+<tr><th>Function</th><th>Description</th></tr>
+<tr><td><code>LoadPieceTextures()</code></td><td>Loads 12 PNG textures from <code>3d_wood/</code> into the global texture map</td></tr>
+<tr><td><code>hasAnyLegalMove(board, side)</code></td><td>Returns true if the given side has at least one legal move</td></tr>
+<tr><td><code>isCheckmate(board, side)</code></td><td>King in check AND no legal moves</td></tr>
+<tr><td><code>isStalemate(board, side)</code></td><td>King NOT in check AND no legal moves</td></tr>
+<tr><td><code>handlePromotionDialog(white)</code></td><td>Renders the modal promotion UI, returns chosen piece char</td></tr>
+<tr><td><code>drawOverlayMessage(board, msg)</code></td><td>Renders a semi-transparent message overlay on the board</td></tr>
+<tr><td><code>drawMenu()</code></td><td>Draws the main menu and returns selected <code>GameMode</code> on click</td></tr>
+</table>
+
+<hr>
+
+<!-- DEVELOPMENT LOG -->
+<h2><a name="session1">9. DEVELOPMENT LOG</a></h2>
+
+<h3><a name="session1-item">Session 1 - Foundation</a></h3>
+<p><b>Board rendering + pawn-only movement</b></p>
+<p>Established the core project structure. Built the <code>Board</code>
+class with an 8x8 character grid, the Raylib rendering loop, and
+mouse-based piece selection. <code>RuleChecker</code> was scaffolded with
+pawn-only move validation (forward single move, initial double push).
+Pieces other than pawns were rendered but could not move.</p>
+<p><i>Tags: Board.cpp, RuleChecker.cpp, Pawn movement, Raylib rendering, Mouse input</i></p>
+
+<h3><a name="session2-item">Session 2 - July 16, 2026</a></h3>
+<p><b>All six pieces + check detection</b></p>
+<p>Extended <code>RuleChecker</code> to support all piece types. Added
+<code>isWhitePiece()</code>, <code>isBlackPiece()</code>,
+<code>isPathClearStraight()</code>, and <code>isPathClearDiagonal()</code>
+helpers. Fixed board-comparison logic so captures (landing on an occupied
+square) were correctly detected instead of only moves to empty squares.
+Check detection was next on the list.</p>
+<p><i>Tags: Bishop, Knight, Rook, Queen, King, Capture detection</i></p>
+
+<h3><a name="session3-item">Session 3</a></h3>
+<p><b>Full rule set, check/checkmate/stalemate, castling, en passant</b></p>
+<p>A large session that completed the entire rule set. Implemented
+<code>isKingInCheck()</code> scanning all enemy attackers. Added
+self-check prevention as a final gate in <code>isValidMove()</code>. Both
+castling variants for both colors (with intermediate-square safety check)
+and en passant were added. The main loop gained
+<code>hasAnyLegalMove()</code>, <code>isCheckmate()</code>, and
+<code>isStalemate()</code>, plus end-game overlay messages.
+<code>LoadPieceTextures()</code> was introduced.</p>
+<p><i>Tags: isKingInCheck(), Castling, En passant, Self-check prevention, Checkmate, Stalemate, Texture loading</i></p>
+
+<h3><a name="session4-item">Session 4 - 2026-07-22</a></h3>
+<p><b>Pawn promotion, castling rook movement, main loop refactor</b></p>
+<p>Pawn promotion was fully implemented with a Raylib modal dialog (Queen /
+Rook / Bishop / Knight). Board state flags <code>isPromoting</code>,
+<code>promotionRow</code>, and <code>promotionCol</code> pause normal input
+while the player chooses. Castling rook movement was wired up so the rook
+physically relocates on the board. Several bugs were fixed: promotion
+state not clearing, turn switching before selection, and rook not moving.
+<code>SetTargetFPS(60)</code> added for consistent frame timing.</p>
+<p><i>Tags: Promotion dialog, Promotion state flags, Castling rook move, Bug fixes, 60 FPS cap</i></p>
+
+<h3><a name="session5-item">Session 5 - 2026-07-29</a></h3>
+<p><b>Minimax AI, move generation, game modes, bot integration</b></p>
+<p>The <code>Engine</code> module was built. <code>generateMoves()</code>
+enumerates all legal board states for a side. <code>minimax()</code>
+recursively searches to depth 4, with terminal detection for checkmate
+and stalemate. <code>engineMove()</code> wraps it and returns the best
+candidate. The game loop was extended with a <code>GameMode</code> enum, a
+graphical main menu (PvP / vs Black Bot / vs White Bot), and logic to
+detect whose turn the bot takes. The evaluator was connected, replacing
+any earlier placeholder.</p>
+<p><i>Tags: generateMoves(), minimax(), engineMove(), GameMode enum, Main menu, Bot integration</i></p>
+
+<h3><a name="session6-item">Session 6 - latest</a></h3>
+<p><b>PeSTO tapered evaluation - midgame/endgame interpolation</b></p>
+<p>The evaluator was upgraded from simple material counting to a
+PeSTO-inspired tapered evaluation. Separate midgame and endgame piece
+values were added alongside all twelve piece-square tables. A game-phase
+counter tracks remaining material (max 24 phase points). The final score
+is blended: <code>(mg * phase + eg * (24 - phase)) / 24</code>. Black's
+tables are mirrored vertically. The engine now makes positionally-aware
+decisions throughout the game - rewarding centralized knights, active
+rooks, and king safety in endgames.</p>
+<p><i>Tags: PeSTO tables, Phase interpolation, Midgame values, Endgame values, Board mirroring</i></p>
+
+<hr>
+
+<!-- BOARD REPRESENTATION -->
+<h2><a name="board-repr">10. BOARD REPRESENTATION</a></h2>
+<p>The board is stored as a plain <code>char squares[8][8]</code> array.
+Uppercase = White, lowercase = Black, space = empty.</p>
+
+<pre>r n b q k b n r   &lt;- rank 8 (row 0)
+p p p p p p p p   &lt;- rank 7 (row 1)
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+P P P P P P P P   &lt;- rank 2 (row 6)
+R N B Q K B N R   &lt;- rank 1 (row 7)</pre>
+
+<table>
+<tr><th>Char</th><th>Piece</th><th>Char</th><th>Piece</th></tr>
+<tr><td><code>P</code></td><td>White Pawn</td><td><code>p</code></td><td>Black Pawn</td></tr>
+<tr><td><code>N</code></td><td>White Knight</td><td><code>n</code></td><td>Black Knight</td></tr>
+<tr><td><code>B</code></td><td>White Bishop</td><td><code>b</code></td><td>Black Bishop</td></tr>
+<tr><td><code>R</code></td><td>White Rook</td><td><code>r</code></td><td>Black Rook</td></tr>
+<tr><td><code>Q</code></td><td>White Queen</td><td><code>q</code></td><td>Black Queen</td></tr>
+<tr><td><code>K</code></td><td>White King</td><td><code>k</code></td><td>Black King</td></tr>
+</table>
+
+<hr>
+
+<!-- FUTURE -->
+<h2><a name="future">11. FUTURE GOALS</a></h2>
+<p>Planned improvements across search, evaluation, and features - roughly
+in priority order.</p>
+
+<h3>Search</h3>
+<ul class="checklist">
+<li class="future">Alpha-Beta Pruning (major speed gain - makes depth 6+ viable)</li>
+<li class="future">Iterative Deepening</li>
+<li class="future">Quiescence Search (reduces horizon effect)</li>
+<li class="future">Transposition Tables + Zobrist Hashing</li>
+<li class="future">Killer Move Heuristic</li>
+<li class="future">History Heuristic</li>
+<li class="future">Move Ordering (MVV-LVA captures first)</li>
+</ul>
+
+<h3>Evaluation</h3>
+<ul class="checklist">
+<li class="future">Mobility evaluation</li>
+<li class="future">Passed, isolated, doubled, and backward pawn detection</li>
+<li class="future">Bishop pair bonus</li>
+<li class="future">Connected rooks / rooks on open files</li>
+<li class="future">King safety + pawn shield</li>
+<li class="future">Static Exchange Evaluation (SEE)</li>
+</ul>
+
+<h3>Features</h3>
+<ul class="checklist">
+<li class="future">Undo / Redo moves</li>
+<li class="future">Move history panel with algebraic notation</li>
+<li class="future">FEN import / export</li>
+<li class="future">PGN support</li>
+<li class="future">UCI protocol (enables external GUI usage)</li>
+<li class="future">Opening book</li>
+<li class="future">Endgame tablebases</li>
+<li class="future">Threefold repetition and fifty-move rule</li>
+</ul>
+
+<hr>
+
+<center>
+<p>=== END OF DOCUMENT ===</p>
+<p><a href="#overview">[ back to top ]</a></p>
+</center>
+
+</div>
+</body>
+</html>
