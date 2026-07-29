@@ -524,3 +524,6 @@ Ensure the **3d_wood** directory is copied beside the executable before running.
 # Conclusion
 
 This project has evolved from a simple chess GUI into a functional chess engine capable of playing complete games. It combines legal move generation, graphical interaction, and a Minimax-based AI with a tapered positional evaluation using PeSTO piece-square tables. The modular architecture provides a solid foundation for implementing stronger search algorithms, advanced evaluation heuristics, and competitive engine features in future development.
+
+
+#forked from https://github.com/apilbhandarimss/Chess-/
