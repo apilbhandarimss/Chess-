@@ -5,6 +5,10 @@ build/
 cmake-build-*/
 out/
 
+# Personal development logs
+LOG/
+*.log
+
 # ----------------------------
 # CMake generated files
 # ----------------------------
