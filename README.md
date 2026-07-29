@@ -407,13 +407,27 @@ Final Score
 
 ---
 
-# How to Build
+# How to Build (Windows - MSYS2 MinGW)
+
+## Prerequisites
+
+- MSYS2 MinGW 64-bit
+- CMake
+- GCC (g++)
+
+## Build
 
 ```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
+cd /c/path/to/ChessEngine
+
+cmake -B build -G "MinGW Makefiles"
+cmake --build build
+```
+
+## Run
+
+```bash
+./build/ChessEngineOOP.exe
 ```
 
 Ensure the **3d_wood** directory is copied beside the executable before running.
