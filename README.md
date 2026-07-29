@@ -407,27 +407,114 @@ Final Score
 
 ---
 
-# How to Build (Windows - MSYS2 MinGW)
+# How to Build
 
 ## Prerequisites
 
-- MSYS2 MinGW 64-bit
-- CMake
-- GCC (g++)
+- CMake 3.11 or newer
+- A C++17 compatible compiler
+- Git (optional, for cloning)
 
-## Build
+---
+
+## Windows (MSYS2 + MinGW)
+
+Install:
+- MSYS2
+- `mingw-w64-x86_64-gcc`
+- `mingw-w64-x86_64-cmake`
+
+Build:
 
 ```bash
-cd /c/path/to/ChessEngine
-
 cmake -B build -G "MinGW Makefiles"
 cmake --build build
 ```
 
-## Run
+Run:
 
 ```bash
 ./build/ChessEngineOOP.exe
+```
+
+---
+
+## Windows (Visual Studio 2022)
+
+Open a **Developer Command Prompt for Visual Studio**.
+
+Build:
+
+```powershell
+cmake -B build
+cmake --build build --config Release
+```
+
+Run:
+
+```powershell
+.\build\Release\ChessEngineOOP.exe
+```
+
+---
+
+## Linux
+
+### Install dependencies
+
+Ubuntu/Debian:
+
+```bash
+sudo apt update
+sudo apt install build-essential cmake
+```
+
+Arch Linux:
+
+```bash
+sudo pacman -S base-devel cmake
+```
+
+Fedora:
+
+```bash
+sudo dnf install gcc-c++ cmake
+```
+
+Build:
+
+```bash
+cmake -B build
+cmake --build build
+```
+
+Run:
+
+```bash
+./build/ChessEngineOOP
+```
+
+---
+
+## macOS
+
+Install prerequisites using Homebrew:
+
+```bash
+brew install cmake
+```
+
+Build:
+
+```bash
+cmake -B build
+cmake --build build
+```
+
+Run:
+
+```bash
+./build/ChessEngineOOP
 ```
 
 Ensure the **3d_wood** directory is copied beside the executable before running.
