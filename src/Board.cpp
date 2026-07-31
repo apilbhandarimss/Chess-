@@ -8,11 +8,11 @@ int selectedRow = -1;
 int selectedCol = -1;
 bool pieceSelected = false;
 
-const int SCREEN_WIDTH = 1500;
-const int SCREEN_HEIGHT = 1080;
-const int BOARD_SIZE = 120*8;
-const int BOARD_OFFSET_X = 40;
-const int BOARD_OFFSET_Y = 10;
+const int SCREEN_WIDTH = 1000;
+const int SCREEN_HEIGHT = 1000;
+const int BOARD_SIZE = 1000;
+const int BOARD_OFFSET_X = 0;
+const int BOARD_OFFSET_Y = 0;
 const int SQUARE_SIZE = BOARD_SIZE / 8;
 
 const Color COLOR_LIGHT_SQ = { 240, 217, 181, 255 };
@@ -94,14 +94,6 @@ void drawBoard(const Board& board)
             }
         }
     }
-
-    DrawRectangle(
-        BOARD_OFFSET_X + BOARD_SIZE + 20,
-        0,
-        SCREEN_WIDTH - (BOARD_OFFSET_X + BOARD_SIZE + 20),
-        SCREEN_HEIGHT,
-        COLOR_SIDEBAR
-    );
 }
 
 void move(Board& b)

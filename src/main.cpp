@@ -7,8 +7,8 @@
 #include "Evaluator.h"
 #include "RuleChecker.h"
 
-const int SCREEN_WIDTH  = 1500;
-const int SCREEN_HEIGHT = 1080;
+const int SCREEN_WIDTH  = 1000;
+const int SCREEN_HEIGHT = 1000;
 
 enum GameMode
 {
@@ -20,20 +20,20 @@ enum GameMode
 
 GameMode drawMenu()
 {
-    const Rectangle pvpBtn      = { 550, 350, 400, 80 };
-    const Rectangle vsBotBlkBtn = { 550, 460, 400, 80 };
-    const Rectangle vsBotWhtBtn = { 550, 570, 400, 80 };
+    const Rectangle pvpBtn      = { 250, 350, 500, 80 };
+    const Rectangle vsBotBlkBtn = { 250, 460, 500, 80 };
+    const Rectangle vsBotWhtBtn = { 250, 570, 500, 80 };
 
     BeginDrawing();
     ClearBackground({ 30, 31, 34, 255 });
-    DrawText("Chess Engine", 580, 200, 48, WHITE);
+    DrawText("Chess Engine", 330, 200, 48, WHITE);
 
     DrawRectangleRec(pvpBtn,      { 60, 60, 60, 255 });
-    DrawText("1)  Player vs Player",  575, 378, 26, WHITE);
+    DrawText("1)  Player vs Player",  275, 378, 26, WHITE);
     DrawRectangleRec(vsBotBlkBtn, { 60, 60, 60, 255 });
-    DrawText("2)  Play vs Black Bot", 575, 488, 26, WHITE);
+    DrawText("2)  Play vs Black Bot", 275, 488, 26, WHITE);
     DrawRectangleRec(vsBotWhtBtn, { 60, 60, 60, 255 });
-    DrawText("3)  Play vs White Bot", 575, 598, 26, WHITE);
+    DrawText("3)  Play vs White Bot", 275, 598, 26, WHITE);
 
     EndDrawing();
 
@@ -97,19 +97,19 @@ bool isStalemate(const Board& board, bool whiteToMove)
 char handlePromotionDialog(bool promotingWhite)
 {
     DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Fade(BLACK, 0.55f));
-    DrawRectangle(450, 250, 600, 350, DARKGRAY);
-    DrawRectangleLines(450, 250, 600, 350, WHITE);
-    DrawText("Promote Pawn", 610, 270, 30, WHITE);
+    DrawRectangle(200, 300, 600, 350, DARKGRAY);
+    DrawRectangleLines(200, 300, 600, 350, WHITE);
+    DrawText("Promote Pawn", 360, 320, 30, WHITE);
 
-    const Rectangle queenBtn  = { 500, 340, 180, 100 };
-    const Rectangle rookBtn   = { 760, 340, 180, 100 };
-    const Rectangle bishopBtn = { 500, 470, 180, 100 };
-    const Rectangle knightBtn = { 760, 470, 180, 100 };
+    const Rectangle queenBtn  = { 230, 390, 180, 100 };
+    const Rectangle rookBtn   = { 490, 390, 180, 100 };
+    const Rectangle bishopBtn = { 230, 510, 180, 100 };
+    const Rectangle knightBtn = { 490, 510, 180, 100 };
 
-    DrawRectangleRec(queenBtn,  LIGHTGRAY); DrawText("Queen",  545, 380, 25, BLACK);
-    DrawRectangleRec(rookBtn,   LIGHTGRAY); DrawText("Rook",   815, 380, 25, BLACK);
-    DrawRectangleRec(bishopBtn, LIGHTGRAY); DrawText("Bishop", 530, 510, 25, BLACK);
-    DrawRectangleRec(knightBtn, LIGHTGRAY); DrawText("Knight", 800, 510, 25, BLACK);
+    DrawRectangleRec(queenBtn,  LIGHTGRAY); DrawText("Queen",  275, 430, 25, BLACK);
+    DrawRectangleRec(rookBtn,   LIGHTGRAY); DrawText("Rook",   545, 430, 25, BLACK);
+    DrawRectangleRec(bishopBtn, LIGHTGRAY); DrawText("Bishop", 260, 550, 25, BLACK);
+    DrawRectangleRec(knightBtn, LIGHTGRAY); DrawText("Knight", 530, 550, 25, BLACK);
 
     if (!IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) return '\0';
 
@@ -122,6 +122,7 @@ char handlePromotionDialog(bool promotingWhite)
 }
 
 void drawOverlayMessage(const Board& board, const char* msg)
+
 {
     BeginDrawing();
     drawBoard(board);
@@ -157,7 +158,6 @@ int main()
             continue;
         }
 
-        
         bool botShouldMove =
             (mode == MODE_VS_BLACK_BOT && !board.whiteturn) ||
             (mode == MODE_VS_WHITE_BOT &&  board.whiteturn);
